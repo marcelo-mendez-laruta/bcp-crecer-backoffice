@@ -150,7 +150,7 @@ export default {
     },
     getEmpresas: function (categoriaId) {
       let categoria = {
-        categoriaId: categoriaId,
+        empresaId: categoriaId,
       };
       console.log(categoria);
       this.$store.dispatch("getEmpresas", categoria).then((response) => {

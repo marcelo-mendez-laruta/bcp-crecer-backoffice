@@ -205,7 +205,7 @@ export default {
       this.empresa = this.$route.params.empresa;
       console.log(this.empresa);
       let empresa = {
-        empresaId: empresaId,
+        productoId: empresaId,
       };
       this.$store.dispatch("getProductos", empresa).then((response) => {
         this.productos = response;
