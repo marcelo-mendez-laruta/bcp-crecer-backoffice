@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row justify="center">
       <v-col cols="11">
-        <p class="text-h4 font-weight-bold">Categorias</p>
+        <p class="text-h5 font-weight-bold">Categorias</p>
       </v-col>
       <v-col cols="11" md="4">
         <v-row v-for="categoria in categorias" :key="categoria.id">
@@ -107,9 +107,19 @@ export default {
     newCategoria: {},
   }),
   beforeMount() {
+    this.auth();
     this.getCategorias();
   },
   methods: {
+    auth() {
+      if (!this.$store.state.loggedin) {
+        if (localStorage.user) {
+          this.$store.commit("SET_USER", localStorage.user);
+        } else {
+          this.$router.push("/login");
+        }
+      }
+    },
     getCategorias: function () {
       this.$store.dispatch("getCategorias").then((response) => {
         this.categorias = response;

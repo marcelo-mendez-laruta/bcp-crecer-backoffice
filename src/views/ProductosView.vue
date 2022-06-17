@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-row justify="center">
-      <v-col cols="8">
+      <v-col cols="11" md="8">
         <v-card>
           <v-row no-gutters>
             <v-col cols="4">
@@ -19,10 +19,8 @@
           </v-row>
         </v-card>
       </v-col>
-      <v-col cols="11">
-        <p class="text-h4 font-weight-bold">Produtos registradas</p>
-      </v-col>
-      <v-col cols="11" md="4">
+      <v-col cols="11" md="5">
+        <p class="text-h5 font-weight-bold">Produtos registrados</p>
         <v-row v-for="producto in productos" :key="producto.id">
           <v-col cols="12" class="my-3">
             <v-card @click="OpenProducto(producto)">
@@ -189,9 +187,19 @@ export default {
     producto: {},
   }),
   beforeMount() {
+    this.auth();
     this.getProductos(this.$route.params.empresa.id);
   },
   methods: {
+    auth() {
+      if (!this.$store.state.loggedin) {
+        if (localStorage.user) {
+          this.$store.commit("SET_USER", localStorage.user);
+        } else {
+          this.$router.push("/login");
+        }
+      }
+    },
     getProductos: function (empresaId) {
       console.log(this.$route.params.empresa);
       this.empresa = this.$route.params.empresa;

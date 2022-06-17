@@ -1,13 +1,26 @@
 <template>
   <v-container fluid>
     <v-row justify="center">
-      <v-col cols="11">
-        <p class="text-h4 font-weight-bold">
-          {{ categoria.nombre }}
-        </p>
-        <p class="text-body2">Empresas registradas</p>
+      <v-col cols="11" md="8">
+        <v-card>
+          <v-row no-gutters>
+            <v-col cols="4">
+              <v-img
+                cover
+                class="rounded-lg rounded-br-0 rounded-tr-0"
+                :src="categoria.imagen"
+                height="100%"
+              ></v-img>
+            </v-col>
+            <v-col cols="8" class="pl-3 pt-5">
+              <p class="text-h5 font-weight-bold">{{ categoria.nombre }}</p>
+              <p class="text-caption">{{ categoria.nombre }}</p>
+            </v-col>
+          </v-row>
+        </v-card>
       </v-col>
-      <v-col cols="11" md="4">
+      <v-col cols="11" md="5">
+        <p class="text-h5 font-weight-bold">Empresas registradas</p>
         <v-row v-for="empresa in empresas" :key="empresa.id">
           <v-col cols="12" class="my-3">
             <v-card @click="GotoProductos(empresa)">
@@ -111,10 +124,20 @@ export default {
     newEmpresa: {},
   }),
   beforeMount() {
+    this.auth();
     this.getEmpresas(this.$route.params.categoriaId);
     this.getCategorias();
   },
   methods: {
+    auth() {
+      if (!this.$store.state.loggedin) {
+        if (localStorage.user) {
+          this.$store.commit("SET_USER", localStorage.user);
+        } else {
+          this.$router.push("/login");
+        }
+      }
+    },
     getCategorias: function () {
       this.$store.dispatch("getCategorias").then((response) => {
         this.categorias = response;
@@ -129,8 +152,10 @@ export default {
       let categoria = {
         categoriaId: categoriaId,
       };
+      console.log(categoria);
       this.$store.dispatch("getEmpresas", categoria).then((response) => {
         this.empresas = response;
+        console.log(response);
       });
     },
     postEmpresa() {

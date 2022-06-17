@@ -11,13 +11,21 @@ export default new Vuex.Store({
     categorias: [],
     empresas: [],
     productos: [],
+    user: {},
+    loggedin: false,
   },
   getters: {
+    getUser: (state) => state.user,
+    isLoggedin: (state) => state.loggedin,
     getCategorias: (state) => state.categorias,
     getEmpresas: (state) => state.empresas,
     getProductos: (state) => state.productos,
   },
   mutations: {
+    SET_USER(state, user) {
+      state.user = user;
+      state.loggedin = true;
+    },
     SET_CATEGORIAS(state, categorias) {
       state.categorias = categorias;
     },
@@ -47,6 +55,30 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    login({ commit }, request) {
+      return new Promise((resolve, reject) => {
+        try {
+          axios
+            .post("login", request)
+            .then((response) => {
+              localStorage.setItem("user", JSON.stringify(response.data));
+              commit("SET_USER", JSON.stringify(response.data));
+              resolve(true);
+            })
+            .catch((error) => {
+              console.error(error);
+              reject(false);
+            });
+        } catch (error) {
+          console.log(error);
+        }
+      });
+    },
+    logout({ state }) {
+      localStorage.removeItem("user");
+      state.user = {};
+      state.loggedin = false;
+    },
     getCategorias({ commit }) {
       if (localStorage.categorias) {
         return new Promise((resolve) => {
