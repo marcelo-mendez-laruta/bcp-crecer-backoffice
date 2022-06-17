@@ -1,7 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
-import { reject, resolve } from "core-js/fn/promise";
 
 Vue.use(Vuex);
 axios.defaults.baseURL =
@@ -11,12 +10,15 @@ export default new Vuex.Store({
   state: {
     categorias: [],
     empresas: [],
+    productos: [],
   },
   getters: {
     getCategorias: (state) => state.categorias,
     getEmpresas: (state) => state.empresas,
+    getProductos: (state) => state.productos,
   },
   mutations: {
+    //MUTATIONS - SECCION CATEGORIAS
     SET_CATEGORIAS(state, categorias) {
       state.categorias = categorias;
     },
@@ -26,15 +28,26 @@ export default new Vuex.Store({
       state.categorias = categorias;
     },
 
-    //MUTATIONS - SECCION EMPRESAS
+    //MUTATIONS - SECCION EMPRESA
     SET_EMPRESAS(state, empresas){
       state.empresas=empresas;
     },
-    ADD_EMPRESAS(state, empresas){
+    ADD_EMPRESA(state, empresa){
       let empresas = state.empresas;
-      empresas.push(empresas);
+      empresas.push(empresa);
       state.empresas = empresas;
+    },
+
+    //MUTATIONS - SECCION PRODUCTOS
+    SET_PRODUCTOS(state, productos){
+      state.getProductos = productos;
+    },
+    ADD_PRODUCTO(state, producto) {
+      let productos = state.productos;
+      productos.push(producto);
+      state.productos = productos;
     }
+
   },
   actions: {
     getCategorias({ commit }) {
@@ -94,21 +107,24 @@ export default new Vuex.Store({
     },
 
     //ACTIONS - SECCION EMPRESAS
-    getEmpresas({commit}) {
+    getEmpresas({commit}, request) {
       // no se revisa cache de navegaor
       return new Promise((resolve, reject) => {
         try {
           axios
-            .post("empresas")
+            .post("empresas", request)
             .then((response) => {
-              commit("SET_EMPRESAS", response.data.empresas);
-              resolve(response.data.empresas);
+              if(response.data!=null)
+              {
+                commit("SET_EMPRESAS", response.data.empresas);
+                resolve(response.data.empresas);
+              }
             })
             .catch((error) => {
               reject(error);
             });
         } catch (error) {
-          comsola.error(error);
+          console.error(error);
         }
       });
     },
@@ -134,7 +150,51 @@ export default new Vuex.Store({
           console.error(error);
         }
       });
-    }
+    },
+
+    //ACTIONS - SECCION PRODUCTOS
+    getProductos({commit}, request) {
+      return new Promise((resolve, reject) => {
+        try {
+          axios
+            .post("productos", request)
+            .then((response) => {
+              if (response.data != null)
+              {
+                commit("SET_PRODUCTOS", response.data.productos);
+                resolve(response.dat.productos);
+              }
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        } catch (error) {
+          console.error("[getProductos] " + error);
+        }
+      });
+    },
+    addProducto({commit, state}, productos) {
+      return new Promise((resolve, reject) => {
+        try {
+          axios
+            .post("nuevoproducto", productos)
+            .then((response) => {
+              console.log("PRODUCTOS: " + response);
+              if (response.data != null) {
+                let productos = state.productos;
+                productos.push(productos);
+                commit("SET_PRODUCTOS", productos);
+              }
+              resolve(response.data);
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        } catch (error) {
+          console.error("[addProducto] " + error);
+        }
+      });
+    },
   },
   modules: {},
 });

@@ -7,7 +7,7 @@
       <v-col cols="11" md="3">
         <v-row v-for="categoria in categorias" :key="categoria.id">
           <v-col cols="12" class="my-3">
-            <v-card>
+            <v-card @click="GotoEmpresa(categoria.id)">
               <v-row>
                 <v-col cols="4" class="pa-0">
                   <v-img
@@ -138,6 +138,11 @@ export default {
     GoTo(pagename) {
       this.$router.push(pagename);
     },
+    GotoEmpresa(categoriaId) {
+      console.log(categoriaId)
+      //this.$router.push({path: `empresa/${categoriaId}`});
+      this.$router.push({ name: 'empresa', params: { categoriaId } }) ;
+    }
   },
 };
 </script>
