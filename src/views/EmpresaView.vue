@@ -16,6 +16,7 @@
               <p class="text-h5 font-weight-bold">{{ categoria.nombre }}</p>
               <p class="text-caption">{{ categoria.nombre }}</p>
             </v-col>
+            <v-col> //agregar boton delete </v-col>
           </v-row>
         </v-card>
       </v-col>
@@ -160,7 +161,7 @@ export default {
     },
     postEmpresa() {
       let empresa = this.newEmpresa;
-      empresa.categoriaId = this.categoriaId;
+      empresa.categoriaId = this.$route.params.categoriaId;
       empresa.color = "sin color";
       this.$store.dispatch("addEmpresa", empresa).then(
         (response) => {

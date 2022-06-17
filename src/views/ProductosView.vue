@@ -213,7 +213,7 @@ export default {
     },
     postProducto() {
       let producto = this.newProducto;
-      producto.empresaId = this.empresa.id;
+      producto.empresaId = this.$route.params.empresa.id;
       producto.color = "sin color";
       this.$store.dispatch("addProducto", producto).then(
         (response) => {
