@@ -8,17 +8,20 @@
         <v-row v-for="categoria in categorias" :key="categoria.id">
           <v-col cols="12" class="my-3">
             <v-card>
-              <v-row>
-                <v-col cols="4" class="pa-0">
+              <v-row no-gutters>
+                <v-col cols="4">
                   <v-img
                     cover
                     class="rounded-lg rounded-br-0 rounded-tr-0"
                     :src="categoria.imagen"
+                    height="100%"
                   ></v-img>
                 </v-col>
-                <v-col cols="8">
-                  <p class="text-h5 font-weight-bold">{{ categoria.nombre }}</p>
-                  <p class="text-caption">{{ categoria.nombre }}</p>
+                <v-col cols="1"></v-col>
+                <v-col cols="7" class="py-2">
+                  <p class="text-h5 font-weight-bold" style="height: 75px">
+                    {{ categoria.nombre }}
+                  </p>
                 </v-col>
               </v-row>
             </v-card>

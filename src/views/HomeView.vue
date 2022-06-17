@@ -1,14 +1,14 @@
 <template>
-  <HelloWorld />
+  <CategoriasView />
 </template>
 
 <script>
-import HelloWorld from "../components/HelloWorld";
+import CategoriasView from "./CategoriasView.vue";
 
 export default {
   name: "HomePage",
   components: {
-    HelloWorld,
+    CategoriasView,
   },
 };
 </script>
