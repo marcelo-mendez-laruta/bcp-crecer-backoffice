@@ -1,7 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
-import { reject, resolve } from "core-js/fn/promise";
 
 Vue.use(Vuex);
 axios.defaults.baseURL =
@@ -11,22 +10,16 @@ export default new Vuex.Store({
   state: {
     categorias: [],
     empresas: [],
-<<<<<<< HEAD
-=======
     productos: [],
     user: {},
     loggedin: false,
->>>>>>> ebb9624f8475c716407f513bd2125433bcd3bba0
   },
   getters: {
     getUser: (state) => state.user,
     isLoggedin: (state) => state.loggedin,
     getCategorias: (state) => state.categorias,
     getEmpresas: (state) => state.empresas,
-<<<<<<< HEAD
-=======
     getProductos: (state) => state.productos,
->>>>>>> ebb9624f8475c716407f513bd2125433bcd3bba0
   },
   mutations: {
     SET_USER(state, user) {
@@ -41,18 +34,6 @@ export default new Vuex.Store({
       categorias.push(categoria);
       state.categorias = categorias;
     },
-<<<<<<< HEAD
-
-    //MUTATIONS - SECCION EMPRESAS
-    SET_EMPRESAS(state, empresas){
-      state.empresas=empresas;
-    },
-    ADD_EMPRESAS(state, empresas){
-      let empresas = state.empresas;
-      empresas.push(empresas);
-      state.empresas = empresas;
-    }
-=======
     //MUTATIONS - SECCION EMPRESA
     SET_EMPRESAS(state, empresas) {
       state.empresas = empresas;
@@ -72,7 +53,6 @@ export default new Vuex.Store({
       productos.push(producto);
       state.productos = productos;
     },
->>>>>>> ebb9624f8475c716407f513bd2125433bcd3bba0
   },
   actions: {
     login({ commit }, request) {
@@ -156,17 +136,6 @@ export default new Vuex.Store({
     },
 
     //ACTIONS - SECCION EMPRESAS
-<<<<<<< HEAD
-    getEmpresas({commit}) {
-      // no se revisa cache de navegaor
-      return new Promise((resolve, reject) => {
-        try {
-          axios
-            .post("empresas")
-            .then((response) => {
-              commit("SET_EMPRESAS", response.data.empresas);
-              resolve(response.data.empresas);
-=======
     getEmpresas({ commit }, request) {
       return new Promise((resolve, reject) => {
         try {
@@ -177,28 +146,11 @@ export default new Vuex.Store({
                 commit("SET_EMPRESAS", response.data.empresas);
                 resolve(response.data.empresas);
               }
->>>>>>> ebb9624f8475c716407f513bd2125433bcd3bba0
             })
             .catch((error) => {
               reject(error);
             });
         } catch (error) {
-<<<<<<< HEAD
-          comsola.error(error);
-        }
-      });
-    },
-    addEmpresas({commit, state}, empresas) {
-      return new Promise((resolve, reject) => {
-        try {
-          axios
-            .post("nuevaempresa", empresas)
-            .then((response) => {
-              console.log("EMPRESAS: " + response);
-              if (response.data) {
-                let empresas = state.empresas;
-                empresas.push(empresas);
-=======
           console.error(error);
         }
       });
@@ -212,7 +164,6 @@ export default new Vuex.Store({
               if (response.data) {
                 let empresas = state.empresas;
                 empresas.push(empresa);
->>>>>>> ebb9624f8475c716407f513bd2125433bcd3bba0
                 commit("SET_EMPRESAS", empresas);
               }
               resolve(response.data);
@@ -225,9 +176,6 @@ export default new Vuex.Store({
           console.error(error);
         }
       });
-<<<<<<< HEAD
-    }
-=======
     },
 
     //ACTIONS - SECCION PRODUCTOS
@@ -272,7 +220,6 @@ export default new Vuex.Store({
         }
       });
     },
->>>>>>> ebb9624f8475c716407f513bd2125433bcd3bba0
   },
   modules: {},
 });
