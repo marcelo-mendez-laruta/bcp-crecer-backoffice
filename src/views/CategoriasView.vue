@@ -7,7 +7,7 @@
       <v-col cols="11" md="4">
         <v-row v-for="categoria in categorias" :key="categoria.id">
           <v-col cols="12" class="my-3">
-            <v-card @click="GotoEmpresa(categoria.id)">
+            <v-card>
               <v-row no-gutters>
                 <v-col cols="4">
                   <v-img
@@ -17,11 +17,52 @@
                     height="100%"
                   ></v-img>
                 </v-col>
-                <v-col cols="8" class="pl-3 pt-5">
-                  <p class="text-h5 font-weight-bold" style="height: 75px">
-                    {{ categoria.nombre }}
-                  </p>
-                  <p class="text-caption">{{ categoria.nombre }}</p>
+                <v-col cols="8" class="pl-3 pt-5" style="heigth: 85px">
+                  <v-row no-gutters>
+                    <v-col cols="12">
+                      <p class="text-h5 font-weight-bold">
+                        {{ categoria.nombre }}
+                      </p>
+                      <p class="text-caption">{{ categoria.nombre }}</p>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-row align="center" justify="space-around" no-gutters>
+                        <v-col cols="4">
+                          <v-btn
+                            class="ma-2"
+                            text
+                            dense
+                            small
+                            color="indigo"
+                            @click="GotoEmpresa(categoria.id)"
+                            >Abrir</v-btn
+                          >
+                        </v-col>
+                        <v-col cols="4">
+                          <v-btn
+                            class="ma-2"
+                            text
+                            dense
+                            small
+                            color="orange"
+                            @click="prepararUpdate(categoria)"
+                            >Editar</v-btn
+                          >
+                        </v-col>
+                        <v-col cols="4">
+                          <v-btn
+                            class="ma-2"
+                            text
+                            dense
+                            small
+                            color="red"
+                            @click="eliminarCategoria(categoria.id)"
+                            >Eliminar</v-btn
+                          >
+                        </v-col>
+                      </v-row>
+                    </v-col>
+                  </v-row>
                 </v-col>
               </v-row>
             </v-card>
@@ -34,7 +75,9 @@
       <v-col cols="11" md="5">
         <v-card>
           <v-card-text>
-            <p class="text-h5 font-weight-bold">Nueva Categoria</p>
+            <p class="text-h5 font-weight-bold">
+              {{ EditarCategoriaFlag ? "Editar Categoria" : "Nueva Categoria" }}
+            </p>
             <v-text-field
               label="Nombre"
               outlined
@@ -79,7 +122,16 @@
                 </v-col>
               </v-row>
             </v-card>
-            <v-btn @click="postCategoria" color="primary"> Registrar </v-btn>
+            <v-btn
+              @click="updateCategoria"
+              color="primary"
+              v-if="EditarCategoriaFlag"
+            >
+              Confirmar
+            </v-btn>
+            <v-btn @click="postCategoria" color="primary" v-else>
+              Registrar
+            </v-btn>
             <v-alert
               class="mt-3"
               dense
@@ -100,6 +152,7 @@
 export default {
   data: () => ({
     categorias: [],
+    EditarCategoriaFlag: false,
     message: {
       content: "",
       state: "",
@@ -152,6 +205,13 @@ export default {
         }
       );
     },
+    prepararUpdate(categoria) {
+      this.EditarCategoriaFlag = true;
+      this.newCategoria = categoria;
+    },
+    eliminarCategoria() {
+      console.log("entra");
+    },
     GoTo(pagename) {
       this.$router.push(pagename);
     },
@@ -168,4 +228,4 @@ export default {
 </script>
 
 <style>
-</style>
+</style> 
