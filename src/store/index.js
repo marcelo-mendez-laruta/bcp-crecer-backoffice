@@ -3,22 +3,28 @@ import Vuex from "vuex";
 import axios from "axios";
 
 Vue.use(Vuex);
-axios.defaults.baseURL =
-  "https://bcpcrecerapi20220611134544.azurewebsites.net/";
+axios.defaults.baseURL = "https://bcpcrecerapi20220611134544.azurewebsites.net/";
 
 export default new Vuex.Store({
   state: {
     categorias: [],
     empresas: [],
     productos: [],
+    user: {},
+    loggedin: false,
   },
   getters: {
+    getUser: (state) => state.user,
+    isLoggedin: (state) => state.loggedin,
     getCategorias: (state) => state.categorias,
     getEmpresas: (state) => state.empresas,
     getProductos: (state) => state.productos,
   },
   mutations: {
-    //MUTATIONS - SECCION CATEGORIAS
+    SET_USER(state, user) {
+      state.user = user;
+      state.loggedin = true;
+    },
     SET_CATEGORIAS(state, categorias) {
       state.categorias = categorias;
     },
@@ -27,29 +33,51 @@ export default new Vuex.Store({
       categorias.push(categoria);
       state.categorias = categorias;
     },
-
     //MUTATIONS - SECCION EMPRESA
-    SET_EMPRESAS(state, empresas){
-      state.empresas=empresas;
+    SET_EMPRESAS(state, empresas) {
+      state.empresas = empresas;
     },
-    ADD_EMPRESA(state, empresa){
+    ADD_EMPRESA(state, empresa) {
       let empresas = state.empresas;
       empresas.push(empresa);
       state.empresas = empresas;
     },
 
     //MUTATIONS - SECCION PRODUCTOS
-    SET_PRODUCTOS(state, productos){
+    SET_PRODUCTOS(state, productos) {
       state.getProductos = productos;
     },
     ADD_PRODUCTO(state, producto) {
       let productos = state.productos;
       productos.push(producto);
       state.productos = productos;
-    }
-
+    },
   },
   actions: {
+    login({ commit }, request) {
+      return new Promise((resolve, reject) => {
+        try {
+          axios
+            .post("login", request)
+            .then((response) => {
+              localStorage.setItem("user", JSON.stringify(response.data));
+              commit("SET_USER", JSON.stringify(response.data));
+              resolve(true);
+            })
+            .catch((error) => {
+              console.error(error);
+              reject(false);
+            });
+        } catch (error) {
+          console.log(error);
+        }
+      });
+    },
+    logout({ state }) {
+      localStorage.removeItem("user");
+      state.user = {};
+      state.loggedin = false;
+    },
     getCategorias({ commit }) {
       if (localStorage.categorias) {
         return new Promise((resolve) => {
@@ -107,15 +135,13 @@ export default new Vuex.Store({
     },
 
     //ACTIONS - SECCION EMPRESAS
-    getEmpresas({commit}, request) {
-      // no se revisa cache de navegaor
+    getEmpresas({ commit }, request) {
       return new Promise((resolve, reject) => {
         try {
           axios
             .post("empresas", request)
             .then((response) => {
-              if(response.data!=null)
-              {
+              if (response.data != null) {
                 commit("SET_EMPRESAS", response.data.empresas);
                 resolve(response.data.empresas);
               }
@@ -128,16 +154,15 @@ export default new Vuex.Store({
         }
       });
     },
-    addEmpresas({commit, state}, empresas) {
+    addEmpresa({ commit, state }, empresa) {
       return new Promise((resolve, reject) => {
         try {
           axios
-            .post("nuevaempresa", empresas)
+            .post("nuevaempresa", empresa)
             .then((response) => {
-              console.log("EMPRESAS: " + response);
               if (response.data) {
                 let empresas = state.empresas;
-                empresas.push(empresas);
+                empresas.push(empresa);
                 commit("SET_EMPRESAS", empresas);
               }
               resolve(response.data);
@@ -153,16 +178,15 @@ export default new Vuex.Store({
     },
 
     //ACTIONS - SECCION PRODUCTOS
-    getProductos({commit}, request) {
+    getProductos({ commit }, request) {
       return new Promise((resolve, reject) => {
         try {
           axios
             .post("productos", request)
             .then((response) => {
-              if (response.data != null)
-              {
+              if (response.data != null) {
                 commit("SET_PRODUCTOS", response.data.productos);
-                resolve(response.dat.productos);
+                resolve(response.data.productos);
               }
             })
             .catch((error) => {
@@ -173,16 +197,16 @@ export default new Vuex.Store({
         }
       });
     },
-    addProducto({commit, state}, productos) {
+    addProducto({ commit, state }, producto) {
       return new Promise((resolve, reject) => {
         try {
           axios
-            .post("nuevoproducto", productos)
+            .post("nuevoproducto", producto)
             .then((response) => {
-              console.log("PRODUCTOS: " + response);
-              if (response.data != null) {
+              console.log("PRODUCTOS: " + response.data);
+              if (response.data) {
                 let productos = state.productos;
-                productos.push(productos);
+                productos.push(producto);
                 commit("SET_PRODUCTOS", productos);
               }
               resolve(response.data);

@@ -2,22 +2,25 @@
   <v-container fluid>
     <v-row justify="center">
       <v-col cols="11">
-        <p class="text-h4 font-weight-bold">Categorias</p>
+        <p class="text-h5 font-weight-bold">Categorias</p>
       </v-col>
-      <v-col cols="11" md="3">
+      <v-col cols="11" md="4">
         <v-row v-for="categoria in categorias" :key="categoria.id">
           <v-col cols="12" class="my-3">
             <v-card @click="GotoEmpresa(categoria.id)">
-              <v-row>
-                <v-col cols="4" class="pa-0">
+              <v-row no-gutters>
+                <v-col cols="4">
                   <v-img
                     cover
                     class="rounded-lg rounded-br-0 rounded-tr-0"
                     :src="categoria.imagen"
+                    height="100%"
                   ></v-img>
                 </v-col>
-                <v-col cols="8">
-                  <p class="text-h5 font-weight-bold">{{ categoria.nombre }}</p>
+                <v-col cols="8" class="pl-3 pt-5">
+                  <p class="text-h5 font-weight-bold" style="height: 75px">
+                    {{ categoria.nombre }}
+                  </p>
                   <p class="text-caption">{{ categoria.nombre }}</p>
                 </v-col>
               </v-row>
@@ -52,13 +55,14 @@
               Previsualizacion
             </p>
             <v-card v-if="newCategoria.nombre != null" class="ma-7">
-              <v-row>
+              <v-row no-gutters>
                 <v-col cols="4">
                   <v-img
                     v-if="newCategoria.imagen != null"
                     cover
                     class="rounded-lg rounded-br-0 rounded-tr-0"
                     :src="newCategoria.imagen"
+                    height="100%"
                   ></v-img>
                   <v-img
                     v-else
@@ -67,10 +71,11 @@
                     src="https://picsum.photos/200/300?random=1"
                   ></v-img>
                 </v-col>
-                <v-col cols="8">
+                <v-col cols="8" class="pl-3 pt-5">
                   <p class="text-h5 font-weight-bold">
                     {{ newCategoria.nombre }}
                   </p>
+                  <p class="text-caption">{{ newCategoria.nombre }}</p>
                 </v-col>
               </v-row>
             </v-card>
@@ -81,7 +86,7 @@
               text
               :type="message.state"
               v-if="message.content != ''"
-            >
+                >
               {{ message.content }}
             </v-alert>
           </v-card-text>
@@ -102,9 +107,19 @@ export default {
     newCategoria: {},
   }),
   beforeMount() {
+    this.auth();
     this.getCategorias();
   },
   methods: {
+    auth() {
+      if (!this.$store.state.loggedin) {
+        if (localStorage.user) {
+          this.$store.commit("SET_USER", localStorage.user);
+        } else {
+          this.$router.push("/login");
+        }
+      }
+    },
     getCategorias: function () {
       this.$store.dispatch("getCategorias").then((response) => {
         this.categorias = response;
@@ -122,11 +137,13 @@ export default {
             this.categorias = this.$store.getters.getCategorias;
             this.message.content = "Se registro la categoria con exito";
             this.message.state = "success";
+            this.newCategoria = {};
             this.funcat();
           } else {
             console.log("no se pudo agregar la categoria");
             this.message.content = "No se pudo agregar";
             this.message.state = "error";
+            this.newCategoria = {};
           }
         },
         (error) => {
@@ -139,10 +156,13 @@ export default {
       this.$router.push(pagename);
     },
     GotoEmpresa(categoriaId) {
-      console.log(categoriaId)
+      console.log(categoriaId);
       //this.$router.push({path: `empresa/${categoriaId}`});
-      this.$router.push({ name: 'empresa', params: { categoriaId } }) ;
-    }
+      this.$router.push({
+        name: "empresabycategoriaid",
+        params: { categoriaId },
+      });
+    },
   },
 };
 </script>
