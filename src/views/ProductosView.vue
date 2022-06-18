@@ -48,7 +48,7 @@
       <v-col cols="11" md="5">
         <v-card>
           <v-card-text>
-            <p class="text-h5 font-weight-bold">Nueva Empresa</p>
+            <p class="text-h5 font-weight-bold">Nuevo Producto</p>
             <v-text-field
               label="Nombre"
               outlined

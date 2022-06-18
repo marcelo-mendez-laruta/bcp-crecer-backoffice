@@ -138,7 +138,7 @@
               text
               :type="message.state"
               v-if="message.content != ''"
-                >
+            >
               {{ message.content }}
             </v-alert>
           </v-card-text>
@@ -228,4 +228,4 @@ export default {
 </script>
 
 <style>
-</style> 
+</style>
