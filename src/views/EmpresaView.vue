@@ -1,27 +1,42 @@
 <template>
   <v-container fluid>
     <v-row justify="center">
-      <v-col cols="11">
-        <p class="text-h5 font-weight-bold">Categorias</p>
+      <v-col cols="11" md="8">
+        <v-card>
+          <v-row no-gutters>
+            <v-col cols="4">
+              <v-img
+                cover
+                class="rounded-lg rounded-br-0 rounded-tr-0"
+                :src="categoria.imagen"
+                height="100%"
+              ></v-img>
+            </v-col>
+            <v-col cols="8" class="pl-3 pt-5">
+              <p class="text-h5 font-weight-bold">{{ categoria.nombre }}</p>
+              <p class="text-caption">{{ categoria.nombre }}</p>
+            </v-col>
+            <v-col> //agregar boton delete </v-col>
+          </v-row>
+        </v-card>
       </v-col>
-      <v-col cols="11" md="4">
-        <v-row v-for="categoria in categorias" :key="categoria.id">
+      <v-col cols="11" md="5">
+        <p class="text-h5 font-weight-bold">Empresas registradas</p>
+        <v-row v-for="empresa in empresas" :key="empresa.id">
           <v-col cols="12" class="my-3">
-            <v-card @click="GotoEmpresa(categoria.id)">
+            <v-card @click="GotoProductos(empresa)">
               <v-row no-gutters>
                 <v-col cols="4">
                   <v-img
                     cover
                     class="rounded-lg rounded-br-0 rounded-tr-0"
-                    :src="categoria.imagen"
+                    :src="empresa.imagen"
                     height="100%"
                   ></v-img>
                 </v-col>
                 <v-col cols="8" class="pl-3 pt-5">
-                  <p class="text-h5 font-weight-bold" style="height: 75px">
-                    {{ categoria.nombre }}
-                  </p>
-                  <p class="text-caption">{{ categoria.nombre }}</p>
+                  <p class="text-h5 font-weight-bold">{{ empresa.nombre }}</p>
+                  <p class="text-caption">{{ empresa.nombre }}</p>
                 </v-col>
               </v-row>
             </v-card>
@@ -34,34 +49,34 @@
       <v-col cols="11" md="5">
         <v-card>
           <v-card-text>
-            <p class="text-h5 font-weight-bold">Nueva Categoria</p>
+            <p class="text-h5 font-weight-bold">Nueva Empresa</p>
             <v-text-field
               label="Nombre"
               outlined
               dense
-              v-model="newCategoria.nombre"
+              v-model="newEmpresa.nombre"
             ></v-text-field>
             <v-text-field
               label="Imagen"
               outlined
               dense
-              v-model="newCategoria.imagen"
+              v-model="newEmpresa.imagen"
             ></v-text-field>
-            <v-divider v-if="newCategoria.nombre != null"></v-divider>
+            <v-divider v-if="newEmpresa.nombre != null"></v-divider>
             <p
-              v-if="newCategoria.nombre != null"
+              v-if="newEmpresa.nombre != null"
               class="text-caption font-weight-bold"
             >
               Previsualizacion
             </p>
-            <v-card v-if="newCategoria.nombre != null" class="ma-7">
+            <v-card v-if="newEmpresa.nombre != null" class="ma-7">
               <v-row no-gutters>
                 <v-col cols="4">
                   <v-img
-                    v-if="newCategoria.imagen != null"
+                    v-if="newEmpresa.imagen != null"
                     cover
                     class="rounded-lg rounded-br-0 rounded-tr-0"
-                    :src="newCategoria.imagen"
+                    :src="newEmpresa.imagen"
                     height="100%"
                   ></v-img>
                   <v-img
@@ -69,17 +84,18 @@
                     cover
                     class="rounded-lg rounded-br-0 rounded-tr-0"
                     src="https://picsum.photos/200/300?random=1"
+                    height="100%"
                   ></v-img>
                 </v-col>
                 <v-col cols="8" class="pl-3 pt-5">
                   <p class="text-h5 font-weight-bold">
-                    {{ newCategoria.nombre }}
+                    {{ newEmpresa.nombre }}
                   </p>
-                  <p class="text-caption">{{ newCategoria.nombre }}</p>
+                  <p class="text-caption">{{ newEmpresa.nombre }}</p>
                 </v-col>
               </v-row>
             </v-card>
-            <v-btn @click="postCategoria" color="primary"> Registrar </v-btn>
+            <v-btn @click="postEmpresa" color="primary"> Registrar </v-btn>
             <v-alert
               class="mt-3"
               dense
@@ -99,15 +115,18 @@
 <script>
 export default {
   data: () => ({
+    categoria: {},
     categorias: [],
+    empresas: [],
     message: {
       content: "",
       state: "",
     },
-    newCategoria: {},
+    newEmpresa: {},
   }),
   beforeMount() {
     this.auth();
+    this.getEmpresas(this.$route.params.categoriaId);
     this.getCategorias();
   },
   methods: {
@@ -123,27 +142,39 @@ export default {
     getCategorias: function () {
       this.$store.dispatch("getCategorias").then((response) => {
         this.categorias = response;
+        response.forEach((categoria) => {
+          if (categoria.id == this.$route.params.categoriaId) {
+            this.categoria = categoria;
+          }
+        });
       });
     },
-    funcat: (cat = this.categorias) => {
-      console.log(cat);
+    getEmpresas: function (categoriaId) {
+      let categoria = {
+        empresaId: categoriaId,
+      };
+      console.log(categoria);
+      this.$store.dispatch("getEmpresas", categoria).then((response) => {
+        this.empresas = response;
+        console.log(response);
+      });
     },
-    postCategoria() {
-      console.log(this.newCategoria);
-      this.newCategoria.color = "sin color";
-      this.$store.dispatch("addCategoria", this.newCategoria).then(
+    postEmpresa() {
+      let empresa = this.newEmpresa;
+      empresa.categoriaId = this.$route.params.categoriaId;
+      empresa.color = "sin color";
+      this.$store.dispatch("addEmpresa", empresa).then(
         (response) => {
           if (response) {
-            this.categorias = this.$store.getters.getCategorias;
-            this.message.content = "Se registro la categoria con exito";
+            this.empresas = this.$store.getters.getEmpresas;
+            this.message.content = "Se registro la empresa con exito";
             this.message.state = "success";
-            this.newCategoria = {};
-            this.funcat();
+            this.newEmpresa = {};
           } else {
-            console.log("no se pudo agregar la categoria");
+            console.log("no se pudo agregar la empresa.");
             this.message.content = "No se pudo agregar";
             this.message.state = "error";
-            this.newCategoria = {};
+            this.newEmpresa = {};
           }
         },
         (error) => {
@@ -155,12 +186,10 @@ export default {
     GoTo(pagename) {
       this.$router.push(pagename);
     },
-    GotoEmpresa(categoriaId) {
-      console.log(categoriaId);
-      //this.$router.push({path: `empresa/${categoriaId}`});
+    GotoProductos(empresa) {
       this.$router.push({
-        name: "empresabycategoriaid",
-        params: { categoriaId },
+        name: "productos",
+        params: { empresa: empresa, empresaId: empresa.id },
       });
     },
   },

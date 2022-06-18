@@ -11,12 +11,28 @@ export default new Vuex.Store({
   state: {
     categorias: [],
     empresas: [],
+<<<<<<< HEAD
+=======
+    productos: [],
+    user: {},
+    loggedin: false,
+>>>>>>> ebb9624f8475c716407f513bd2125433bcd3bba0
   },
   getters: {
+    getUser: (state) => state.user,
+    isLoggedin: (state) => state.loggedin,
     getCategorias: (state) => state.categorias,
     getEmpresas: (state) => state.empresas,
+<<<<<<< HEAD
+=======
+    getProductos: (state) => state.productos,
+>>>>>>> ebb9624f8475c716407f513bd2125433bcd3bba0
   },
   mutations: {
+    SET_USER(state, user) {
+      state.user = user;
+      state.loggedin = true;
+    },
     SET_CATEGORIAS(state, categorias) {
       state.categorias = categorias;
     },
@@ -25,6 +41,7 @@ export default new Vuex.Store({
       categorias.push(categoria);
       state.categorias = categorias;
     },
+<<<<<<< HEAD
 
     //MUTATIONS - SECCION EMPRESAS
     SET_EMPRESAS(state, empresas){
@@ -35,8 +52,53 @@ export default new Vuex.Store({
       empresas.push(empresas);
       state.empresas = empresas;
     }
+=======
+    //MUTATIONS - SECCION EMPRESA
+    SET_EMPRESAS(state, empresas) {
+      state.empresas = empresas;
+    },
+    ADD_EMPRESA(state, empresa) {
+      let empresas = state.empresas;
+      empresas.push(empresa);
+      state.empresas = empresas;
+    },
+
+    //MUTATIONS - SECCION PRODUCTOS
+    SET_PRODUCTOS(state, productos) {
+      state.getProductos = productos;
+    },
+    ADD_PRODUCTO(state, producto) {
+      let productos = state.productos;
+      productos.push(producto);
+      state.productos = productos;
+    },
+>>>>>>> ebb9624f8475c716407f513bd2125433bcd3bba0
   },
   actions: {
+    login({ commit }, request) {
+      return new Promise((resolve, reject) => {
+        try {
+          axios
+            .post("login", request)
+            .then((response) => {
+              localStorage.setItem("user", JSON.stringify(response.data));
+              commit("SET_USER", JSON.stringify(response.data));
+              resolve(true);
+            })
+            .catch((error) => {
+              console.error(error);
+              reject(false);
+            });
+        } catch (error) {
+          console.log(error);
+        }
+      });
+    },
+    logout({ state }) {
+      localStorage.removeItem("user");
+      state.user = {};
+      state.loggedin = false;
+    },
     getCategorias({ commit }) {
       if (localStorage.categorias) {
         return new Promise((resolve) => {
@@ -94,6 +156,7 @@ export default new Vuex.Store({
     },
 
     //ACTIONS - SECCION EMPRESAS
+<<<<<<< HEAD
     getEmpresas({commit}) {
       // no se revisa cache de navegaor
       return new Promise((resolve, reject) => {
@@ -103,11 +166,24 @@ export default new Vuex.Store({
             .then((response) => {
               commit("SET_EMPRESAS", response.data.empresas);
               resolve(response.data.empresas);
+=======
+    getEmpresas({ commit }, request) {
+      return new Promise((resolve, reject) => {
+        try {
+          axios
+            .post("empresas", request)
+            .then((response) => {
+              if (response.data != null) {
+                commit("SET_EMPRESAS", response.data.empresas);
+                resolve(response.data.empresas);
+              }
+>>>>>>> ebb9624f8475c716407f513bd2125433bcd3bba0
             })
             .catch((error) => {
               reject(error);
             });
         } catch (error) {
+<<<<<<< HEAD
           comsola.error(error);
         }
       });
@@ -122,6 +198,21 @@ export default new Vuex.Store({
               if (response.data) {
                 let empresas = state.empresas;
                 empresas.push(empresas);
+=======
+          console.error(error);
+        }
+      });
+    },
+    addEmpresa({ commit, state }, empresa) {
+      return new Promise((resolve, reject) => {
+        try {
+          axios
+            .post("nuevaempresa", empresa)
+            .then((response) => {
+              if (response.data) {
+                let empresas = state.empresas;
+                empresas.push(empresa);
+>>>>>>> ebb9624f8475c716407f513bd2125433bcd3bba0
                 commit("SET_EMPRESAS", empresas);
               }
               resolve(response.data);
@@ -134,7 +225,54 @@ export default new Vuex.Store({
           console.error(error);
         }
       });
+<<<<<<< HEAD
     }
+=======
+    },
+
+    //ACTIONS - SECCION PRODUCTOS
+    getProductos({ commit }, request) {
+      return new Promise((resolve, reject) => {
+        try {
+          axios
+            .post("productos", request)
+            .then((response) => {
+              if (response.data != null) {
+                commit("SET_PRODUCTOS", response.data.productos);
+                resolve(response.data.productos);
+              }
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        } catch (error) {
+          console.error("[getProductos] " + error);
+        }
+      });
+    },
+    addProducto({ commit, state }, producto) {
+      return new Promise((resolve, reject) => {
+        try {
+          axios
+            .post("nuevoproducto", producto)
+            .then((response) => {
+              console.log("PRODUCTOS: " + response.data);
+              if (response.data) {
+                let productos = state.productos;
+                productos.push(producto);
+                commit("SET_PRODUCTOS", productos);
+              }
+              resolve(response.data);
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        } catch (error) {
+          console.error("[addProducto] " + error);
+        }
+      });
+    },
+>>>>>>> ebb9624f8475c716407f513bd2125433bcd3bba0
   },
   modules: {},
 });
