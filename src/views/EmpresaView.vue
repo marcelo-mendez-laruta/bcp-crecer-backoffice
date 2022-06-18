@@ -16,7 +16,6 @@
               <p class="text-h5 font-weight-bold">{{ categoria.nombre }}</p>
               <p class="text-caption">{{ categoria.nombre }}</p>
             </v-col>
-            <v-col> //agregar boton delete </v-col>
           </v-row>
         </v-card>
       </v-col>
