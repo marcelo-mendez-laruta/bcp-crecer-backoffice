@@ -12,7 +12,7 @@ export default new Vuex.Store({
     productos: [],
     user: {},
     loggedin: false,
-    SignIn: null,
+    SignIn: [],
   },
   getters: {
     getUser: (state) => state.user,
@@ -87,6 +87,30 @@ export default new Vuex.Store({
       state.user = {};
       state.loggedin = false;
     },
+    addSigIn({commit, state}, newSignIn) {
+      return new Promise((resolve, reject) => {
+        try {
+          axios
+            .post("SigIn", newSignIn)
+            .then((response) => {
+              console.log("[addSigIn] Response: " + response);
+              if (response.data) {
+                let varSignIn = state.SignIn;
+                varSignIn.push(newSignIn);
+                commit("SET_SIGN", varSignIn);
+              }
+              resolve(response.data);
+            })
+            .catch((error) => {
+              console.error("[addSigIn] " + error);
+              reject(false);
+            })
+        } catch (error) {
+          console.log("[addSigIn] " + error);
+        }
+      });
+    },
+
     getCategorias({ commit }) {
       if (localStorage.categorias) {
         return new Promise((resolve) => {

@@ -30,6 +30,15 @@
                     <v-container fluid>
                         <v-text-field label="Correo electrónico" outlined v-model="NewSignIn.email"></v-text-field>
                         <v-text-field label="Teléfono" outlined v-model="NewSignIn.telefono"></v-text-field>
+                        <v-text-field
+                            v-model="NewSignIn.password"
+                            label="Contraseña"
+                            placeholder="Ingrese una contraseña para su usuario."
+                            outlined
+                            :type="showpassword ? 'text' : 'password'"
+                            :append-icon="showpassword ? 'mdi-eye' : 'mdi-eye-off'"
+                            @click:append="showpassword = !showpassword"
+                        ></v-text-field>
                     </v-container>
                 </v-card-actions>
             </v-col>
@@ -52,16 +61,31 @@
                         </v-row>
                         <v-row justify="center" no-gutters>
                             <v-col>
-                                <v-menu ref="menu" v-model="menu" :close-on-content-click="false"
-                                    transition="scale-transition" offset-y min-width="auto">
+                                <v-menu 
+                                    ref="menu" 
+                                    v-model="menu" 
+                                    :close-on-content-click="false"
+                                    transition="scale-transition" 
+                                    offset-y 
+                                    min-width="auto"
+                                >
                                     <template v-slot:activator="{ on, attrs }">
-                                        <v-text-field v-model="date" label="Fecha de nacimiento"
-                                            prepend-icon="mdi-calendar" readonly v-bind="attrs" v-on="on" solo>
+                                        <v-text-field 
+                                            v-model="date" 
+                                            label="Fecha de nacimiento"
+                                            prepend-icon="mdi-calendar" 
+                                            readonly v-bind="attrs" 
+                                            v-on="on" 
+                                            outlined>
                                         </v-text-field>
                                     </template>
-                                    <v-date-picker v-model="NewSignIn.fecnac" :active-picker.sync="activePicker"
+                                    <v-date-picker 
+                                        v-model="date" 
+                                        :active-picker.sync="activePicker"
                                         :max="(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)"
-                                        min="1950-01-01" @change="save"></v-date-picker>
+                                        min="1950-01-01" 
+                                        @change="save"
+                                    ></v-date-picker>
                                 </v-menu>
                             </v-col>
                         </v-row>
@@ -76,19 +100,24 @@
                                 <v-text-field label="00" outlined v-model="NewSignIn.complementoidc"></v-text-field>
                             </v-col>
                         </v-row>
+                        <v-row ajustify="center" no-gutters>
+                            <v-col class="d-flex" cols="12">
+                                <v-select :items="TipoDoc" label="Tipo de documento" outlined v-model="NewSignIn.tipoidc"></v-select>
+                            </v-col>
+                        </v-row>
+
 
                         <v-divider class="mx-4"></v-divider>
                         <br>
                         <v-row justify="center" no-gutters>
                             <v-col>
                                 <v-text-field label="Imagen" outlined v-model="NewSignIn.imagen"></v-text-field>
-                                <v-divider v-if="NewSignIn.imagen != null"></v-divider>
                                 <p v-if="NewSignIn.imagen != null" class="text-caption font-weight-bold">
                                     Imagen cargada.
                                 </p>
                             </v-col>
                             <v-col class="d-flex" cols="12">
-                                <v-select :items="Role" outlined label="Seleccione su rol" v-model="NewSignIn.extidc"></v-select>
+                                <v-select :items="Role" outlined label="Seleccione su rol" v-model="NewSignIn.role"></v-select>
                             </v-col>
                         </v-row>
                     </v-container>
@@ -105,11 +134,21 @@
                                 </v-btn>
                             </v-col>
                             <v-col cols="7">
-                                <v-btn depressed color=rgb(33,230,193) block>
+                                <v-btn depressed color=rgb(33,230,193) block
+                                    @click="postSignIn">
                                     Guardar
                                 </v-btn>
                             </v-col>
                         </v-row>
+                        <v-alert
+                            class="mt-3"
+                            dense
+                            text
+                            :type="message.state"
+                            v-if="message.content != ''"
+                            >
+                        {{ message.content }}
+                        </v-alert>
                     </v-container>
                 </v-card-actions>
             </v-col>
@@ -121,10 +160,65 @@
 <script>
 export default {
     data: () => ({
+        activePicker: null,
+        date: null,
+        menu: false,
+
         Extensiones: ["LP", "CB", "SC", "OR", "PO", "CH", "TJ", "PA", "BE"],
+        TipoDoc: ["Carnet de identidad", "NIT"],
         Role: ["Administrador", "Usuario", "Cliente"],
         NewSignIn: {},
+
+        showpassword: false,
+        message: {
+            content: "",
+            state: "",
+        },
     }),
+    beforeMount() {
+
+    },
+    watch: {
+        menu (val) {
+            val && setTimeout(() => (this.activePicker = 'YEAR'))
+        },
+    },
+    methods: {
+        save (date) {
+            this.$refs.menu.save(date)
+        },
+        validarTipDoc() {
+            if(this.NewSignIn.tipoidc == "Carnet de identidad"){
+                this.NewSignIn.tipoidc = "Q"
+            }
+            else if(this.NewSignIn.tipoidc == "NIT"){
+                this.NewSignIn.tipoidc = "R"
+            }
+        },
+        postSignIn() {
+            this.NewSignIn.fecnac = this.date;
+            this.validarTipDoc();
+            console.log(this.NewSignIn);
+            this.$store.dispatch("addSigIn", this.NewSignIn).then(
+                (response) => {
+                    if (response) {
+                        this.message.content = "Su usuario fue registrado correctamente.";
+                        this.message.state = "success";
+                        this.NewSignIn = {};
+                    } else {
+                        this.message.content = "Surgio un problema, contactese con el administrador del aplicativo.";
+                        this.message.state = "error";
+                        this.NewSignIn = {};
+                        console.log("No se pudo registrar al usuario.")
+                    }
+                },
+                (error) => {
+                    console.error("[SignIn] No se pudo conectar al servicio.");
+                    console.error(error);
+                }
+            );
+        }
+    }
 }
 </script>
 
