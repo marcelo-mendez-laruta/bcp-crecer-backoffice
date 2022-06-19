@@ -129,7 +129,8 @@
                     <v-container>
                         <v-row justify="center">
                             <v-col cols="5">
-                                <v-btn outlined color=rgb(252,81,133) block>
+                                <v-btn outlined color=rgb(252,81,133) block
+                                @click="clear">
                                     Limpiar
                                 </v-btn>
                             </v-col>
@@ -159,6 +160,9 @@
 
 <script>
 export default {
+    components: {
+      
+    },
     data: () => ({
         activePicker: null,
         date: null,
@@ -217,7 +221,23 @@ export default {
                     console.error(error);
                 }
             );
-        }
+        },
+        clear () {
+            
+            this.NewSignIn.email = '';
+            this.NewSignIn.password = '';
+            this.NewSignIn.telefono = 0;
+            this.NewSignIn.nombre = '';
+            this.NewSignIn.paterno = '';
+            this.NewSignIn.materno = '';
+            this.NewSignIn.imagen = '';
+            this.NewSignIn.fecnac = '';
+            this.NewSignIn.idc = '';
+            this.NewSignIn.tipoidc = '';
+            this.NewSignIn.extidc = '';
+            this.NewSignIn.complementoidc = '';
+            this.NewSignIn.role = '';
+        },
     }
 }
 </script>
