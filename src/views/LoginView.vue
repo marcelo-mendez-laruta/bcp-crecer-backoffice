@@ -39,6 +39,16 @@
               ><v-icon left> mdi-login </v-icon> Login
             </v-btn>
           </v-col>
+          <v-col cols="10">
+            <v-btn
+            @click="Registrarse"
+              text
+              color="primary"
+              block
+            >
+            Registrarse
+            </v-btn>          
+          </v-col>
         </v-row>
       </v-card>
     </v-col>
@@ -80,6 +90,9 @@ export default {
         }
       });
     },
+    Registrarse() {
+      this.$router.push("/Registrar");
+    }
   },
 };
 </script>

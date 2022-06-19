@@ -4,6 +4,7 @@ import HomeView from "../views/HomeView.vue";
 import CategoriasView from "../views/CategoriasView.vue";
 import EmpresaView from "../views/EmpresaView.vue";
 import ProductosView from "../views/ProductosView.vue";
+import RegistrarSignView from "../views/RegistrarSign.vue";
 
 Vue.use(VueRouter);
 
@@ -36,6 +37,11 @@ const routes = [
     meta: {
       hideNavbar: true,
     },
+  },
+  {
+    path: "/Registrar",
+    name: "registrarSign",
+    component: RegistrarSignView,
   },
 ];
 

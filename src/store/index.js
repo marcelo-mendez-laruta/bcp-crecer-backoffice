@@ -12,6 +12,7 @@ export default new Vuex.Store({
     productos: [],
     user: {},
     loggedin: false,
+    SignIn: null,
   },
   getters: {
     getUser: (state) => state.user,
@@ -19,12 +20,20 @@ export default new Vuex.Store({
     getCategorias: (state) => state.categorias,
     getEmpresas: (state) => state.empresas,
     getProductos: (state) => state.productos,
+    getSign: (state)  => state.SignIn,
   },
   mutations: {
     SET_USER(state, user) {
       state.user = user;
       state.loggedin = true;
     },
+
+    //MUTATIONS - SECCION SIGNIN
+    
+    SET_SIGN(state, SignIn) {
+      state.SignIn = SignIn;
+    },
+    //MUTATIONS - SECCION CATEGORIAS
     SET_CATEGORIAS(state, categorias) {
       state.categorias = categorias;
     },
