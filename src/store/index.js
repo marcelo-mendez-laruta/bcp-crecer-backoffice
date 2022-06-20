@@ -3,7 +3,8 @@ import Vuex from "vuex";
 import axios from "axios";
 
 Vue.use(Vuex);
-axios.defaults.baseURL = "https://bcpcrecerapi20220611134544.azurewebsites.net/";
+axios.defaults.baseURL =
+  "https://bcpcrecerapi20220611134544.azurewebsites.net/";
 
 export default new Vuex.Store({
   state: {
@@ -20,7 +21,7 @@ export default new Vuex.Store({
     getCategorias: (state) => state.categorias,
     getEmpresas: (state) => state.empresas,
     getProductos: (state) => state.productos,
-    getSign: (state)  => state.SignIn,
+    getSign: (state) => state.SignIn,
   },
   mutations: {
     SET_USER(state, user) {
@@ -29,7 +30,7 @@ export default new Vuex.Store({
     },
 
     //MUTATIONS - SECCION SIGNIN
-    
+
     SET_SIGN(state, SignIn) {
       state.SignIn = SignIn;
     },
@@ -87,24 +88,21 @@ export default new Vuex.Store({
       state.user = {};
       state.loggedin = false;
     },
-    addSigIn({commit, state}, newSignIn) {
+    addSignIn({ commit }, newSignIn) {
       return new Promise((resolve, reject) => {
         try {
           axios
-            .post("SigIn", newSignIn)
+            .post("SignIn", newSignIn)
             .then((response) => {
-              console.log("[addSigIn] Response: " + response);
-              if (response.data) {
-                let varSignIn = state.SignIn;
-                varSignIn.push(newSignIn);
-                commit("SET_SIGN", varSignIn);
-              }
+              console.log("[addSigIn] Response: " + response.data);
+              commit("SET_USER", response.data);
               resolve(response.data);
             })
             .catch((error) => {
               console.error("[addSigIn] " + error);
-              reject(false);
-            })
+              let userblank = {};
+              reject(userblank);
+            });
         } catch (error) {
           console.log("[addSigIn] " + error);
         }
