@@ -197,7 +197,41 @@ export default new Vuex.Store({
         }
       });
     },
-
+    deleteCategoria({ commit, state }, categoriaId) {
+      let request = {
+        categoriaId: categoriaId,
+      };
+      return new Promise((resolve, reject) => {
+        try {
+          axios
+            .post("deletecategoria", request)
+            .then((response) => {
+              console.log(response);
+              if (response.data) {
+                let categorias = state.categorias;
+                let newCategorias = [];
+                categorias.forEach((oldcategoria) => {
+                  if (oldcategoria.id != categoriaId) {
+                    newCategorias.push(oldcategoria);
+                  }
+                });
+                localStorage.setItem(
+                  "categorias",
+                  JSON.stringify(newCategorias)
+                );
+                commit("SET_CATEGORIAS", newCategorias);
+              }
+              resolve(response.data);
+            })
+            .catch((error) => {
+              console.error(error);
+              reject(false);
+            });
+        } catch (error) {
+          console.log(error);
+        }
+      });
+    },
     //ACTIONS - SECCION EMPRESAS
     getEmpresas({ commit }, request) {
       return new Promise((resolve, reject) => {

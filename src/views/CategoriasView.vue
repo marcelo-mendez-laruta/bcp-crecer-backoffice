@@ -234,8 +234,27 @@ export default {
         }
       );
     },
-    eliminarCategoria() {
-      console.log("entra");
+    eliminarCategoria(categoriaId) {
+      this.$store.dispatch("deleteCategoria", categoriaId).then(
+        (response) => {
+          if (response) {
+            this.categorias = this.$store.getters.getCategorias;
+            this.message.content = "Se Elimino la categoria con exito";
+            this.message.state = "success";
+            this.newCategoria = {};
+            this.funcat();
+          } else {
+            console.log("no se pudo actualizar la categoria");
+            this.message.content = "No se pudo actualizar";
+            this.message.state = "error";
+            this.newCategoria = {};
+          }
+        },
+        (error) => {
+          console.error("No se pudo conectar con el servicio");
+          console.error(error);
+        }
+      );
     },
     GoTo(pagename) {
       this.$router.push(pagename);

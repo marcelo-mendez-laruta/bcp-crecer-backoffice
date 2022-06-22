@@ -9,7 +9,12 @@
           max-width="150"
         ></v-img>
         <v-spacer></v-spacer>
-        <v-btn icon color="indigo" @click="logout">
+        <v-btn
+          icon
+          color="indigo"
+          @click="logout"
+          v-if="!$route.meta.hidelogout"
+        >
           <v-icon>mdi-logout</v-icon>
         </v-btn>
       </v-app-bar>

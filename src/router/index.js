@@ -42,6 +42,9 @@ const routes = [
     path: "/Registrar",
     name: "registrarSign",
     component: RegistrarSignView,
+    meta: {
+      hidelogout: true,
+    },
   },
 ];
 
