@@ -7,9 +7,9 @@
       <v-col cols="11" md="4">
         <v-row v-for="categoria in categorias" :key="categoria.id">
           <v-col cols="12" class="my-3">
-            <v-card>
-              <v-row no-gutters>
-                <v-col cols="4">
+            <v-card height="150">
+              <v-row no-gutters style="height: 100%">
+                <v-col cols="4" style="height: 100%">
                   <v-img
                     cover
                     class="rounded-lg rounded-br-0 rounded-tr-0"
@@ -35,8 +35,9 @@
                             small
                             color="indigo"
                             @click="GotoEmpresa(categoria.id)"
-                            >Abrir</v-btn
                           >
+                            <v-icon dark> mdi-eye </v-icon>
+                          </v-btn>
                         </v-col>
                         <v-col cols="4">
                           <v-btn
@@ -46,8 +47,9 @@
                             small
                             color="orange"
                             @click="prepararUpdate(categoria)"
-                            >Editar</v-btn
                           >
+                            <v-icon dark> mdi-pencil </v-icon>
+                          </v-btn>
                         </v-col>
                         <v-col cols="4">
                           <v-btn
@@ -57,8 +59,9 @@
                             small
                             color="red"
                             @click="eliminarCategoria(categoria.id)"
-                            >Eliminar</v-btn
                           >
+                            <v-icon dark> mdi-delete </v-icon>
+                          </v-btn>
                         </v-col>
                       </v-row>
                     </v-col>
@@ -138,7 +141,7 @@
               text
               :type="message.state"
               v-if="message.content != ''"
-                >
+            >
               {{ message.content }}
             </v-alert>
           </v-card-text>
@@ -208,6 +211,28 @@ export default {
     prepararUpdate(categoria) {
       this.EditarCategoriaFlag = true;
       this.newCategoria = categoria;
+    },
+    updateCategoria() {
+      this.$store.dispatch("updateCategoria", this.newCategoria).then(
+        (response) => {
+          if (response) {
+            this.categorias = this.$store.getters.getCategorias;
+            this.message.content = "Se actualizo la categoria con exito";
+            this.message.state = "success";
+            this.newCategoria = {};
+            this.funcat();
+          } else {
+            console.log("no se pudo actualizar la categoria");
+            this.message.content = "No se pudo actualizar";
+            this.message.state = "error";
+            this.newCategoria = {};
+          }
+        },
+        (error) => {
+          console.error("No se pudo conectar con el servicio");
+          console.error(error);
+        }
+      );
     },
     eliminarCategoria() {
       console.log("entra");

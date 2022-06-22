@@ -108,7 +108,6 @@ export default new Vuex.Store({
         }
       });
     },
-
     getCategorias({ commit }) {
       if (localStorage.categorias) {
         return new Promise((resolve) => {
@@ -152,6 +151,40 @@ export default new Vuex.Store({
                 categorias.push(categoria);
                 localStorage.setItem("categorias", JSON.stringify(categorias));
                 commit("SET_CATEGORIAS", categorias);
+              }
+              resolve(response.data);
+            })
+            .catch((error) => {
+              console.error(error);
+              reject(false);
+            });
+        } catch (error) {
+          console.log(error);
+        }
+      });
+    },
+    updateCategoria({ commit, state }, categoria) {
+      return new Promise((resolve, reject) => {
+        try {
+          axios
+            .post("updatecategoria", categoria)
+            .then((response) => {
+              console.log(response);
+              if (response.data) {
+                let categorias = state.categorias;
+                let newCategorias = [];
+                categorias.forEach((oldcategoria) => {
+                  if (oldcategoria.id == categoria.id) {
+                    newCategorias.push(categoria);
+                  } else {
+                    newCategorias.push(oldcategoria);
+                  }
+                });
+                localStorage.setItem(
+                  "categorias",
+                  JSON.stringify(newCategorias)
+                );
+                commit("SET_CATEGORIAS", newCategorias);
               }
               resolve(response.data);
             })

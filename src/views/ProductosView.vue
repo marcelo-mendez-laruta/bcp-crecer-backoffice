@@ -201,11 +201,9 @@ export default {
       }
     },
     getProductos: function (empresaId) {
-      console.log(this.$route.params.empresa);
       this.empresa = this.$route.params.empresa;
-      console.log(this.empresa);
       let empresa = {
-        productoId: empresaId,
+        empresaId: empresaId,
       };
       this.$store.dispatch("getProductos", empresa).then((response) => {
         this.productos = response;
