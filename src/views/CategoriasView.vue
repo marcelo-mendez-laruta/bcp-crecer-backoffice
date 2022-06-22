@@ -5,7 +5,7 @@
         <v-col cols="12">
           <p class="text-h5 font-weight-bold">Categorias</p>
         </v-col>
-        <v-col cols="12" md="4">
+        <v-col cols="12" md="12">
           <v-btn
             text
             tile
@@ -16,8 +16,8 @@
             Nueva Categoria
           </v-btn>
         </v-col>
-
-        <v-col cols="12" md="8">
+        <v-spacer></v-spacer>
+        <v-col cols="12" md="6" offset-md="3">
           <v-text-field
             outlined
             label="Buscar Categoria"
