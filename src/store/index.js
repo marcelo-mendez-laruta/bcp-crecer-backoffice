@@ -79,7 +79,7 @@ export default new Vuex.Store({
               reject(false);
             });
         } catch (error) {
-          console.log(error);
+          console.error(error);
         }
       });
     },
@@ -92,14 +92,14 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         try {
           axios
-            .post("SignIn", newSignIn)
+            .post("registroUsuario", newSignIn)
             .then((response) => {
-              console.log("[addSigIn] Response: " + response.data);
-              commit("SET_USER", response.data);
-              resolve(response.data);
+              console.log("[addSigIn] Response: " + response);
+              commit("SET_USER", response);
+              resolve(response);
             })
             .catch((error) => {
-              console.error("[addSigIn] " + error);
+              console.error(error);
               let userblank = {};
               reject(userblank);
             });
@@ -172,12 +172,15 @@ export default new Vuex.Store({
           axios
             .post("empresas", request)
             .then((response) => {
+              console.log("[getEmpresas]");
+              console.log(response);
               if (response.data != null) {
-                commit("SET_EMPRESAS", response.data.empresas);
+                commit("SET_EMPRESAS", response.empresas);
                 resolve(response.data.empresas);
               }
             })
             .catch((error) => {
+              console.error("[getEmpresas] " + error);
               reject(error);
             });
         } catch (error) {
