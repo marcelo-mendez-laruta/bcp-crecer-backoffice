@@ -1,6 +1,17 @@
 <template>
   <v-container fluid>
     <v-row justify="center">
+      <v-col cols="11">
+        <v-btn
+          tile
+          text
+          color="black"
+          @click="hasHistory() ? $router.go(-1) : $router.push('/')"
+        >
+          <v-icon left> mdi-arrow-left </v-icon>
+          Atras
+        </v-btn>
+      </v-col>
       <v-col cols="11" md="8">
         <v-card>
           <v-row no-gutters>
@@ -235,6 +246,9 @@ export default {
     },
     GoTo(pagename) {
       this.$router.push(pagename);
+    },
+    hasHistory() {
+      return window.history.length > 2;
     },
     OpenProducto(producto) {
       this.producto = producto;
