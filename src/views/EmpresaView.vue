@@ -5,12 +5,7 @@
         <v-card>
           <v-row no-gutters>
             <v-col cols="4">
-              <v-img
-                cover
-                class="rounded-lg rounded-br-0 rounded-tr-0"
-                :src="categoria.imagen"
-                height="100%"
-              ></v-img>
+              <v-img cover class="rounded-lg rounded-br-0 rounded-tr-0" :src="categoria.imagen" height="100%"></v-img>
             </v-col>
             <v-col cols="8" class="pl-3 pt-5">
               <p class="text-h5 font-weight-bold">{{ categoria.nombre }}</p>
@@ -26,12 +21,7 @@
             <v-card @click="GotoProductos(empresa)">
               <v-row no-gutters>
                 <v-col cols="4">
-                  <v-img
-                    cover
-                    class="rounded-lg rounded-br-0 rounded-tr-0"
-                    :src="empresa.imagen"
-                    height="100%"
-                  ></v-img>
+                  <v-img cover class="rounded-lg rounded-br-0 rounded-tr-0" :src="empresa.imagen" height="100%"></v-img>
                 </v-col>
                 <v-col cols="8" class="pl-3 pt-5">
                   <p class="text-h5 font-weight-bold">{{ empresa.nombre }}</p>
@@ -49,42 +39,19 @@
         <v-card>
           <v-card-text>
             <p class="text-h5 font-weight-bold">Nueva Empresa</p>
-            <v-text-field
-              label="Nombre"
-              outlined
-              dense
-              v-model="newEmpresa.nombre"
-            ></v-text-field>
-            <v-text-field
-              label="Imagen"
-              outlined
-              dense
-              v-model="newEmpresa.imagen"
-            ></v-text-field>
+            <v-text-field label="Nombre" outlined dense v-model="newEmpresa.nombre"></v-text-field>
+            <v-text-field label="Imagen" outlined dense v-model="newEmpresa.imagen"></v-text-field>
             <v-divider v-if="newEmpresa.nombre != null"></v-divider>
-            <p
-              v-if="newEmpresa.nombre != null"
-              class="text-caption font-weight-bold"
-            >
+            <p v-if="newEmpresa.nombre != null" class="text-caption font-weight-bold">
               Previsualizacion
             </p>
             <v-card v-if="newEmpresa.nombre != null" class="ma-7">
               <v-row no-gutters>
                 <v-col cols="4">
-                  <v-img
-                    v-if="newEmpresa.imagen != null"
-                    cover
-                    class="rounded-lg rounded-br-0 rounded-tr-0"
-                    :src="newEmpresa.imagen"
-                    height="100%"
-                  ></v-img>
-                  <v-img
-                    v-else
-                    cover
-                    class="rounded-lg rounded-br-0 rounded-tr-0"
-                    src="https://picsum.photos/200/300?random=1"
-                    height="100%"
-                  ></v-img>
+                  <v-img v-if="newEmpresa.imagen != null" cover class="rounded-lg rounded-br-0 rounded-tr-0"
+                    :src="newEmpresa.imagen" height="100%"></v-img>
+                  <v-img v-else cover class="rounded-lg rounded-br-0 rounded-tr-0"
+                    src="https://picsum.photos/200/300?random=1" height="100%"></v-img>
                 </v-col>
                 <v-col cols="8" class="pl-3 pt-5">
                   <p class="text-h5 font-weight-bold">
@@ -95,13 +62,7 @@
               </v-row>
             </v-card>
             <v-btn @click="postEmpresa" color="primary"> Registrar </v-btn>
-            <v-alert
-              class="mt-3"
-              dense
-              text
-              :type="message.state"
-              v-if="message.content != ''"
-            >
+            <v-alert class="mt-3" dense text :type="message.state" v-if="message.content != ''">
               {{ message.content }}
             </v-alert>
           </v-card-text>
@@ -153,10 +114,12 @@ export default {
         categoriaId: categoriaId,
       };
       console.log(categoria);
-      this.$store.dispatch("getEmpresas", categoria).then((response) => {
-        this.empresas = response;
-        console.log(response);
-      });
+      this.$store.dispatch("getEmpresas", categoria)
+        .then(
+          (response) => {
+          this.empresas = response;
+          console.log(response);
+        });
     },
     postEmpresa() {
       let empresa = this.newEmpresa;

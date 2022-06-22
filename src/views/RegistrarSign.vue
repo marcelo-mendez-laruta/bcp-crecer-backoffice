@@ -5,7 +5,7 @@
 </template>
 
 <script>
-    import Registro from "@/components/Login/SignIn.vue";
+    import Registro from "../components/Login/SignIn";
 
     export default{
         components: {
