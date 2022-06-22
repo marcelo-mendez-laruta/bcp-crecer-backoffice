@@ -145,14 +145,18 @@ export default new Vuex.Store({
           axios
             .post("nuevacategoria", categoria)
             .then((response) => {
-              console.log(response);
-              if (response.data) {
+              if (response.status == 200) {
                 let categorias = state.categorias;
-                categorias.push(categoria);
-                localStorage.setItem("categorias", JSON.stringify(categorias));
-                commit("SET_CATEGORIAS", categorias);
+                categorias.push(response.data);
+                localStorage.setItem(
+                  "categorias",
+                  JSON.stringify(response.data)
+                );
+                commit("SET_CATEGORIAS", response.data);
+                resolve(true);
+              } else {
+                resolve(false);
               }
-              resolve(response.data);
             })
             .catch((error) => {
               console.error(error);
@@ -169,7 +173,7 @@ export default new Vuex.Store({
           axios
             .post("updatecategoria", categoria)
             .then((response) => {
-              console.log(response);
+              console.log(response.status);
               if (response.data) {
                 let categorias = state.categorias;
                 let newCategorias = [];
@@ -201,6 +205,7 @@ export default new Vuex.Store({
       let request = {
         categoriaId: categoriaId,
       };
+      console.log(request);
       return new Promise((resolve, reject) => {
         try {
           axios

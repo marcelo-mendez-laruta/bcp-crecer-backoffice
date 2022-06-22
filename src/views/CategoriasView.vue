@@ -227,14 +227,18 @@ export default {
             this.message.state = "error";
             this.newCategoria = {};
           }
+          this.EditarCategoriaFlag = false;
         },
         (error) => {
           console.error("No se pudo conectar con el servicio");
           console.error(error);
+          this.EditarCategoriaFlag = false;
+          this.newCategoria = {};
         }
       );
     },
     eliminarCategoria(categoriaId) {
+      console.log(categoriaId);
       this.$store.dispatch("deleteCategoria", categoriaId).then(
         (response) => {
           if (response) {
