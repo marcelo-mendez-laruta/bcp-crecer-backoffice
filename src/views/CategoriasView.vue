@@ -105,7 +105,13 @@
       </v-col>
     </v-row>
     <v-overlay :value="newCategoriaOverlay" light>
-      <v-card v-click-outside="CloseOverlay" width="100%" light>
+      <v-card
+        v-click-outside="CloseOverlay"
+        style="margin-left: 10% !important"
+        width="80%"
+        max-width="80%"
+        light
+      >
         <v-card-text>
           <p class="text-h5 font-weight-bold black--text">
             {{ EditarCategoriaFlag ? "Editar Categoria" : "Nueva Categoria" }}
@@ -244,10 +250,11 @@ export default {
         (response) => {
           if (response) {
             this.categorias = this.$store.getters.getCategorias;
+            this.filteredCategorias = this.$store.getters.getCategorias;
             this.message.content = "Se registro la categoria con exito";
             this.message.state = "success";
             this.newCategoria = {};
-            this.funcat();
+            this.newCategoriaOverlay = false;
           } else {
             console.log("no se pudo agregar la categoria");
             this.message.content = "No se pudo agregar";
@@ -272,9 +279,11 @@ export default {
         (response) => {
           if (response) {
             this.categorias = this.$store.getters.getCategorias;
+            this.filteredCategorias = this.$store.getters.getCategorias;
             this.message.content = "Se actualizo la categoria con exito";
             this.message.state = "success";
             this.newCategoria = {};
+            this.newCategoriaOverlay = false;
             this.funcat();
           } else {
             console.log("no se pudo actualizar la categoria");
@@ -293,6 +302,7 @@ export default {
           this.newCategoria = {};
         }
       );
+      this.newCategoriaOverlay = false;
     },
     eliminarCategoria(categoriaId) {
       console.log(categoriaId);
@@ -303,7 +313,7 @@ export default {
             this.message.content = "Se Elimino la categoria con exito";
             this.message.state = "success";
             this.newCategoria = {};
-            this.funcat();
+            this.filteredCategorias = this.$store.getters.getCategorias;
           } else {
             console.log("no se pudo actualizar la categoria");
             this.message.content = "No se pudo actualizar";

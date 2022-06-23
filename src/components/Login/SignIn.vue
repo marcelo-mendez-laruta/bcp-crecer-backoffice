@@ -240,7 +240,7 @@ export default {
     activePicker: null,
     date: null,
     menu: false,
-
+    loading: false,
     Extensiones: ["LP", "CB", "SC", "OR", "PO", "CH", "TJ", "PA", "BE"],
     TipoDoc: ["Carnet de identidad", "NIT"],
     Role: ["Administrador", "Usuario", "Cliente"],

@@ -140,19 +140,19 @@ export default new Vuex.Store({
       }
     },
     addCategoria({ commit, state }, categoria) {
+      console.log("categoria request:" + categoria);
       return new Promise((resolve, reject) => {
         try {
           axios
             .post("nuevacategoria", categoria)
             .then((response) => {
               if (response.status == 200) {
+                console.log("categoria response:" + response.data);
                 let categorias = state.categorias;
                 categorias.push(response.data);
-                localStorage.setItem(
-                  "categorias",
-                  JSON.stringify(response.data)
-                );
-                commit("SET_CATEGORIAS", response.data);
+
+                localStorage.setItem("categorias", JSON.stringify(categorias));
+                commit("SET_CATEGORIAS", categorias);
                 resolve(true);
               } else {
                 resolve(false);
